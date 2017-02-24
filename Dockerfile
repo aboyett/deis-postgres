@@ -9,7 +9,6 @@ RUN buildDeps='gcc git libffi-dev libssl-dev python3-dev python3-pip python3-whe
     apt-get update && \
     apt-get install -y --no-install-recommends \
         $buildDeps \
-        gosu \
         lzop \
         pv \
         python3 \
