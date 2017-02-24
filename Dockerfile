@@ -2,7 +2,6 @@ FROM quay.io/deis/base:v0.3.6
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=9.4 \
-    PG_VERSION=9.4.11-1.pgdg16.04+1 \
     PGDATA=/var/lib/postgresql/data
 
 # Set this separately from those above since it depends on one of them
@@ -25,8 +24,8 @@ RUN buildDeps='gcc git libffi-dev libssl-dev python3-dev python3-pip python3-whe
         $buildDeps \
         gosu \
         lzop \
-        postgresql-$PG_MAJOR=$PG_VERSION \
-        postgresql-contrib-$PG_MAJOR=$PG_VERSION \
+        postgresql-$PG_MAJOR \
+        postgresql-contrib-$PG_MAJOR \
         pv \
         python3 \
         postgresql-common \
