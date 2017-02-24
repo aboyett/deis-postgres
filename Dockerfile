@@ -1,43 +1,24 @@
-FROM quay.io/deis/base:v0.3.6
+FROM postgres:9.4
 
 ENV LANG=en_US.utf8 \
-    PG_MAJOR=9.4 \
-    PG_VERSION=9.4.11-1.pgdg16.04+1 \
     PGDATA=/var/lib/postgresql/data
-
-# Set this separately from those above since it depends on one of them
-ENV PATH=/usr/lib/postgresql/$PG_MAJOR/bin:$PATH
-
-# Add postgres user and group
-RUN adduser --system \
-    --shell /bin/bash \
-    --disabled-password \
-    --group \
-    postgres
 
 RUN buildDeps='gcc git libffi-dev libssl-dev python3-dev python3-pip python3-wheel' && \
     localedef -i en_US -c -f UTF-8 -A /etc/locale.alias en_US.UTF-8 && \
     export DEBIAN_FRONTEND=noninteractive && \
-    apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8 && \
-    echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         $buildDeps \
         gosu \
         lzop \
-        postgresql-$PG_MAJOR=$PG_VERSION \
-        postgresql-contrib-$PG_MAJOR=$PG_VERSION \
         pv \
         python3 \
-        postgresql-common \
         util-linux \
         # swift package needs pkg_resources and setuptools
         python3-pkg-resources \
         python3-setuptools && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip && \
-    mkdir -p /run/postgresql && \
-    chown -R postgres /run/postgresql && \
     pip install --disable-pip-version-check --no-cache-dir \
         envdir==0.7 \
         wal-e[aws,azure,google,swift]==v1.0.1 && \
